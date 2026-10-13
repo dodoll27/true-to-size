@@ -1,4 +1,5 @@
 import { useRef, useState, type DragEvent } from "react";
+import { parseDxf, type ParseDxfResult } from "./parser/parseDxf";
 
 function formatSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
@@ -6,7 +7,7 @@ function formatSize(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-type LoadedFile = { file: File; text: string };
+type LoadedFile = { file: File; result: ParseDxfResult };
 
 function App() {
   const [files, setFiles] = useState<LoadedFile[]>([]);
@@ -20,7 +21,8 @@ function App() {
     const loaded: LoadedFile[] = [];
     for (const file of picked) {
       try {
-        loaded.push({ file, text: await file.text() });
+        const text = await file.text();
+        loaded.push({ file, result: parseDxf(text) });
       } catch {
         // Unreadable entries (e.g. a dropped folder) are skipped
       }
@@ -147,7 +149,7 @@ function App() {
 
         {files.length > 0 && (
           <ul className="mt-16 space-y-3">
-            {files.map(({ file, text }, i) => (
+            {files.map(({ file, result }, i) => (
               <li
                 key={`${file.name}-${file.lastModified}-${i}`}
                 className={`flex bg-(image:--texture-grain) items-center gap-4 bg-card px-4 py-2 shadow-[2px_3px_0_rgba(27,26,23,0.15)] ${
@@ -160,8 +162,14 @@ function App() {
                 <span className="min-w-0 flex-1 truncate text-sm">
                   {file.name}
                 </span>
-                <span className="text-xs opacity-60">
-                  {text.split("\n").length} lines · {formatSize(file.size)}
+                <span
+                  className={`text-xs ${result.ok ? "opacity-60" : "text-pop"}`}
+                  title={result.ok ? undefined : result.error}
+                >
+                  {result.ok
+                    ? `${result.dxf.entities?.length ?? 0} entities`
+                    : "not a valid DXF"}{" "}
+                  · {formatSize(file.size)}
                 </span>
                 <button
                   type="button"
