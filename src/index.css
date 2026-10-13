@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme {
+  --color-paper: #efe9dc;
+  --color-card: #faf7f0;
+  --color-ink: #1b1a17;
+  --color-pop: #e8452c;
+  --color-tape: #f2d24b;
+
+  --font-serif: "Bodoni 72", Didot, "Playfair Display", Georgia, serif;
+  --font-mono: "American Typewriter", "Courier New", ui-monospace, monospace;
+  --font-hand: "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+
+  /* Paper grain and torn bottom edge, used as bg-(image:--texture-grain) and [clip-path:var(--shape-torn)] */
+  --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .45 0 0 0 -.16'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --shape-torn: polygon(
+    0 0, 100% 0, 100% 97%, 96% 100%, 91% 97.5%, 87% 99.5%, 82% 97%, 77% 100%,
+    72% 98%, 67% 99.5%, 61% 97%, 56% 100%, 50% 97.5%, 45% 99.5%, 40% 97%,
+    34% 100%, 29% 98%, 24% 99.5%, 18% 97%, 13% 100%, 8% 97.5%, 4% 99.5%, 0 97%
+  );
+}
